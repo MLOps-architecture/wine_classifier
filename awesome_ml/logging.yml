@@ -1,0 +1,37 @@
+version: 1
+disable_existing_loggers: true
+# Configuring the default (root) logger is highly recommended
+root:
+  level: INFO
+  handlers: [console]
+loggers:
+  # Logging from application
+  awesome_ml:
+    level: INFO
+    handlers: [console]
+    qualname: awesome_ml
+    propagate: false
+  drtools.utils.task:
+    level: INFO
+    handlers: [container]
+    qualname: drtools.utils.task
+    propagate: false
+handlers:
+  console:
+    class: logging.StreamHandler
+    stream: ext://sys.stdout
+    formatter: simple
+    level: INFO
+  container:
+    class: logging.StreamHandler
+    stream: ext://sys.stdout
+    formatter: container
+    level: INFO
+formatters:
+  simple:
+    class: logging.Formatter
+    format: '%(asctime)s %(name)-26s %(levelname)-7s %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  container:
+    class: logging.Formatter
+    format: '|CONTAINER| %(message)s'

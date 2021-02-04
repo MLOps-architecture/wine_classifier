@@ -1,0 +1,22 @@
+version: '2.1'
+services:
+    dask-worker:
+      volumes:
+        - ${MODULES_PATH-..}/sparsity:/home/drtools/sparsity
+        - ${MODULES_PATH-..}/drtools_base:/home/drtools/drtools
+        - ${MODULES_PATH-..}/awesome_ml:/home/drtools/awesome_ml
+
+      environment:
+        - PYTHONPATH=/home/drtools/awesome_ml/:/home/drtools/drtools/:/home/drtools/sparsity/
+        - DRTOOLS_SETTINGS_MODULE=awesome_ml.settings.dev
+
+    controller:
+      volumes:
+        - ${MODULES_PATH-..}/sparsity:/home/drtools/sparsity
+        - ${MODULES_PATH-..}/drtools_base:/home/drtools/drtools
+        - ${MODULES_PATH-..}/awesome_ml:/home/drtools/awesome_ml
+
+      environment:
+        - PYTHONPATH=/home/drtools/awesome_ml/:/home/drtools/drtools/:/home/drtools/sparsity/
+        - DRTOOLS_SETTINGS_MODULE=awesome_ml.settings.dev
+        - MODULES_PATH

@@ -1,0 +1,14 @@
+# Create a conda environment by calling:
+# conda env create -f environment.yml
+name: awesome_ml
+
+channels:
+  - conda-forge
+
+# list dependencies that should be installed by conda
+# versions should match with what's specified in requirements.txt
+dependencies:
+  - nomkl
+  - numpy
+  - pip:
+    - -e .  # this will install the package itself

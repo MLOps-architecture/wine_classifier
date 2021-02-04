@@ -1,0 +1,15 @@
+# File which describes the current models features names can include valid
+# regex. Mainly used for human consumption but keeping this machine readable
+# might make it useful when generating reports
+#
+# Example:
+#
+# features:
+#   - name: feature_oh_.*
+#     description: |
+#       One hot encoded features used to indicate presence of some state or
+#       variable in a sample.
+#   - name: feature_meta_age
+#     description: |
+#       ...
+#
