@@ -1,0 +1,3 @@
+[model]
+modelUri = "s3://mlops-model-artifact/1/d41dd65f245345b3b409ad8121735f34/artifacts/model"
+environment = "stage"
