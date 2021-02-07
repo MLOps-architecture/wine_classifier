@@ -1,17 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: prefect-conf-cr
+  name: prefect-deployment-cr
 rules:
-- apiGroups: [""]
+- apiGroups: ["machinelearning.seldon.io"]
   #
-  # at the HTTP level, the name of the resource for accessing Pod
-  # objects is "pods"
-  resources: ["pods"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["batch", "extensions"]
-  #
-  # at the HTTP level, the name of the resource for accessing Job
-  # objects is "jobs"
-  resources: ["jobs"]
+  # at the HTTP level, the name of the resource for accessing Deployment
+  # objects is "deployments"
+  resources: ["seldondeployments"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]

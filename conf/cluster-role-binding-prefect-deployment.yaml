@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: prefect-conf
+  name: prefect-deployment
 subjects:
 - kind: ServiceAccount
-  name: prefect-conf-sa
+  name: prefect-deployment-sa
   namespace: prefect
 roleRef:
   kind: ClusterRole
-  name: prefect-conf-cr
+  name: prefect-deployment-cr
   apiGroup: rbac.authorization.k8s.io
