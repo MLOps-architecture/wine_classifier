@@ -9,38 +9,36 @@ from sklearn.linear_model import ElasticNet
 import mlflow.sklearn
 
 import logging
+
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
+
 
 @task
 def fetch_data():
     # Read the wine-quality csv file from the URL
-    csv_url =\
-        'http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv'
+    csv_url = "http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv"
     try:
-        data = pd.read_csv(csv_url, sep=';')
+        data = pd.read_csv(csv_url, sep=";")
     except Exception as e:
         logger.exception(
-            "Unable to download training & test CSV, check your internet connection. Error: %s", e)
+            "Unable to download training & test CSV, check your internet connection. Error: %s",
+            e,
+        )
     return data
 
 
 @task
 def train_model(
-        data: pd.DataFrame,
-        in_alpha: float, 
-        in_l1_ratio: float,
-        mlflow_experiment_id: int
+    data: pd.DataFrame, in_alpha: float, in_l1_ratio: float, mlflow_experiment_id: int
 ):
-    
     def eval_metrics(actual, pred):
         rmse = np.sqrt(mean_squared_error(actual, pred))
         mae = mean_absolute_error(actual, pred)
         r2 = r2_score(actual, pred)
-        
+
         return rmse, mae, r2
 
-    
     train, test = train_test_split(data)
 
     # The predicted column is "quality" which is a scalar from [3, 9]
@@ -61,7 +59,7 @@ def train_model(
     else:
         l1_ratio = float(in_l1_ratio)
 
-    # Useful for multiple runs (only doing one run in this sample notebook)    
+    # Useful for multiple runs (only doing one run in this sample notebook)
     with mlflow.start_run(experiment_id=mlflow_experiment_id):
         # Execute ElasticNet
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
