@@ -1,27 +1,28 @@
 # coding=utf-8
-import versioneer
+import logging
+import subprocess
 from setuptools import setup, find_packages
 
 packages = find_packages()
 
-with open('requirements.txt') as fp:
+
+def no_private(dependencies):
+    public_pkgs = [x.split("#")[0].strip() for x in dependencies if "# private" not in x]
+    return public_pkgs
+
+
+with open("requirements.txt") as fp:
     dependencies = fp.readlines()
 
-with open('requirements-test.txt') as fp:
-    test_dependencies = fp.readlines()
 
 setup(
-    name='awesome_ml',
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
-    description='Project to demo the MLOps architecture',
-    author='Data Revenue GmbH',
-    author_email='markus@datarevenue.com',
-    install_requires=dependencies,
-    extras_require={
-        'test': test_dependencies,
-    },
+    name="wine_classifier",
+    version="0.1",
+    description="Wine classifier project for MLOps demo",
+    author="Data Revenue GmbH",
+    author_email="pedro@datarevenue.com",
+    install_requires= no_private(dependencies),
     packages=packages,
     zip_safe=False,
-    include_package_data=True
+    include_package_data=True,
 )

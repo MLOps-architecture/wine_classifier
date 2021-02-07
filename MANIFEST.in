@@ -1,3 +1,0 @@
-include awesome_ml/logging.yml
-include versioneer.py
-include awesome_ml/_version.py

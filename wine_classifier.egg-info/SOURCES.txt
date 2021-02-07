@@ -1,0 +1,7 @@
+setup.py
+wine_classifier.egg-info/PKG-INFO
+wine_classifier.egg-info/SOURCES.txt
+wine_classifier.egg-info/dependency_links.txt
+wine_classifier.egg-info/not-zip-safe
+wine_classifier.egg-info/requires.txt
+wine_classifier.egg-info/top_level.txt
