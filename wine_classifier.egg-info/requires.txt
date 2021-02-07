@@ -1,9 +1,0 @@
-mlflow
-prefect
-pandas
-numpy
-sklearn
-botocore
-boto3
-setuptools
-versioneer
