@@ -1,20 +1,88 @@
 import yaml
-from os import path
-from prefect import task
 from kubernetes import client, config
+from prefect import task
 
+seldon_deployment = """
+    apiVersion: machinelearning.seldon.io/v1alpha2
+    kind: SeldonDeployment
+    metadata:
+      name: wines-classifier
+    spec:
+      predictors:
+      - graph:
+          children: []
+          implementation: MLFLOW_SERVER
+          modelUri: dummy
+          name: wines-classifier
+        name: model-a
+        replicas: 1
+        traffic: 100
+        componentSpecs:
+        - spec:
+            # We are setting high failureThreshold as installing conda dependencies
+            # can take long time and we want to avoid k8s killing the container prematurely
+            containers:
+            - name: wines-classifier
+              livenessProbe:
+                initialDelaySeconds: 60
+                failureThreshold: 100
+                periodSeconds: 5
+                successThreshold: 1
+                httpGet:
+                  path: /health/ping
+                  port: http
+                  scheme: HTTP
+              readinessProbe:
+                initialDelaySeconds: 60
+                failureThreshold: 100
+                periodSeconds: 5
+                successThreshold: 1
+                httpGet:
+                  path: /health/ping
+                  port: http
+                  scheme: HTTP
 
-@task()
+"""
+
+CUSTOM_RESOURCE_INFO = dict(
+    group="machinelearning.seldon.io",
+    version="v1alpha2",
+    plural="seldondeployments",
+)
+
+@task
 def deploy_model(model_uri: str, namespace: str = "default"):
+    print(f"Deploying model {model_uri}")
 
     config.load_incluster_config()
-    v1 = client.CoreV1Api()
+    custom_api = client.CustomObjectsApi()
 
-    with open(
-        path.join(path.dirname(__file__), "../deployment/seldon-deployment.yaml")
-    ) as f:
-        dep = yaml.safe_load(f)
-        dep["spec"]["predictors"][0]["graph"]["modelUri"] = model_uri
+    dep = yaml.safe_load(seldon_deployment)
+    dep["spec"]["predictors"][0]["graph"]["modelUri"] = model_uri
 
-        resp = v1.create_namespaced_deployment(body=dep, namespace=namespace)
-        print("Deployment created. status='%s'" % resp.metadata.name)
+    # resp = v1.create_namespaced_deployment(body=dep, namespace=namespace)
+    try:
+        resp = custom_api.create_namespaced_custom_object(
+            **CUSTOM_RESOURCE_INFO,
+            namespace=namespace,
+            body=dep,
+        )
+    except:
+        print("Updating existing model")
+        existent_deployment = custom_api.get_namespaced_custom_object(
+            **CUSTOM_RESOURCE_INFO,
+            namespace=namespace,
+            name=dep["metadata"]["name"],
+        )
+        existent_deployment["spec"]["predictors"][0]["graph"]["modelUri"] = model_uri
+
+        resp = custom_api.replace_namespaced_custom_object(
+            **CUSTOM_RESOURCE_INFO,
+            namespace=namespace,
+            name=existent_deployment["metadata"]["name"],
+            body=existent_deployment,
+        )
+
+    #TODO: wait to become available
+
+    print("Deployment created. status='%s'" % resp["status"]["state"])
