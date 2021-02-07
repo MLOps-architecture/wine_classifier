@@ -7,7 +7,9 @@ packages = find_packages()
 
 
 def no_private(dependencies):
-    public_pkgs = [x.split("#")[0].strip() for x in dependencies if "# private" not in x]
+    public_pkgs = [
+        x.split("#")[0].strip() for x in dependencies if "# private" not in x
+    ]
     return public_pkgs
 
 
@@ -21,7 +23,7 @@ setup(
     description="Wine classifier project for MLOps demo",
     author="Data Revenue GmbH",
     author_email="pedro@datarevenue.com",
-    install_requires= no_private(dependencies),
+    install_requires=no_private(dependencies),
     packages=packages,
     zip_safe=False,
     include_package_data=True,

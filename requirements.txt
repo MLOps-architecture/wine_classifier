@@ -7,3 +7,4 @@ botocore
 boto3
 setuptools
 versioneer
+kubernetes
