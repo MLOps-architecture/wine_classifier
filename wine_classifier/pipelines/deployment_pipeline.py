@@ -4,13 +4,10 @@ from prefect import task
 from kubernetes import client, config
 
 
-
-
-
-@task
+@task()
 def deploy_model(model_uri: str, namespace: str = "default"):
 
-    config.load_inkube_config()
+    config.load_incluster_config()
     v1 = client.CoreV1Api()
 
     with open(
@@ -21,5 +18,3 @@ def deploy_model(model_uri: str, namespace: str = "default"):
 
         resp = v1.create_namespaced_deployment(body=dep, namespace=namespace)
         print("Deployment created. status='%s'" % resp.metadata.name)
-
-

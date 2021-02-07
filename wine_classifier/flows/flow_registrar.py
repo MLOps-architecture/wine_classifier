@@ -38,7 +38,7 @@ def model_deployment_pipeline():
     custom_confs = {
         "run_config": KubernetesRun(
             image="drtools/prefect:wine-classifier-3",
-            #labels=[environment],
+            # labels=[environment],
             service_account_name="prefect-deployment-sa",
         ),
         "storage": S3(bucket="dr-prefect"),
@@ -63,6 +63,12 @@ def register_train_pipeline_cli(*args, **kwargs):
 @cli.command(name="register-model-deployment")
 def deploy_model_cli(*args, **kwargs):
     model_deployment_pipeline(*args, **kwargs)
+
+
+@cli.command(name="register-all-flows")
+def deploy_model_cli():
+    model_deployment_pipeline()
+    wine_classifier_train_pipeline()
 
 
 if __name__ == "__main__":
