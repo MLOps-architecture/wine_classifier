@@ -32,8 +32,6 @@ def wine_classifier_train_pipeline():
 
 
 def model_deployment_pipeline():
-    model_uri = config["model"]["modelUri"]
-    environment = config["model"]["environment"]
 
     custom_confs = {
         "run_config": KubernetesRun(
@@ -45,6 +43,9 @@ def model_deployment_pipeline():
     }
 
     with Flow("model-deployment-pipeline", **custom_confs,) as flow:
+        model_uri = Parameter("model_uri", default=config["model"]["modelUri"])
+        environment = Parameter("environment", default=config["model"]["environment"])
+
         deploy_model(model_uri=model_uri, namespace=environment)
 
     flow.register(project_name="mlops-demo")
