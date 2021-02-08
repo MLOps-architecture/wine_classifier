@@ -66,6 +66,8 @@ def deploy_model(model_uri: str, namespace: str = "default"):
         resp = custom_api.create_namespaced_custom_object(
             **CUSTOM_RESOURCE_INFO, namespace=namespace, body=dep,
         )
+
+        logger.info("Deployment created. status='%s'" % resp["status"]["state"])
     except:
         logger.info("Updating existing model")
         existent_deployment = custom_api.get_namespaced_custom_object(
@@ -79,3 +81,6 @@ def deploy_model(model_uri: str, namespace: str = "default"):
             name=existent_deployment["metadata"]["name"],
             body=existent_deployment,
         )
+
+    # TODO: wait to become available
+
