@@ -35,8 +35,7 @@ jobs:
 
       - name: Register model deployment flow
         run: |
-          ls
-       #   - python wine_classifier/flows/flow_registrar.py  register-model-deployment
+          - python wine_classifier/wine_classifier/flows/flow_registrar.py  register-model-deployment
 
       - name: Set prefect server
         run: | 
