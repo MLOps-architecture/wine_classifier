@@ -11,18 +11,13 @@ from wine_classifier.pipelines.deployment_pipeline import deploy_model
 
 mlflow.set_tracking_uri("http://mlflow.datarevenue.com:5000")
 
-FLOW_GITHUB_STORAGE = GitHub(
-    repo="datarevenue-berlin/wine_classifier",
-    path="wine_classifier/flows/flow_registrar.py",
-)
-
 
 def wine_classifier_train_pipeline():
     custom_confs = {
         "run_config": KubernetesRun(
             image="drtools/prefect:wine-classifier-3", labels=["stage"]
         ),
-        "storage": FLOW_GITHUB_STORAGE,
+        "storage": S3("dr-bucket"),
     }
     with Flow("wine-classifier-train-pipeline", **custom_confs,) as flow:
         in_alpha = Parameter("in_alpha", default=0.5)
@@ -44,7 +39,7 @@ def model_deployment_pipeline():
             # labels=[environment],
             service_account_name="prefect-deployment-sa",
         ),
-        "storage": FLOW_GITHUB_STORAGE
+        "storage": S3("dr-bucket")
     }
 
     with Flow("model-deployment-pipeline", **custom_confs,) as flow:
@@ -54,9 +49,6 @@ def model_deployment_pipeline():
         deploy_model(model_uri=model_uri, namespace=environment)
 
     flow.register(project_name="mlops-demo")
-
-
-
 
 
 @click.group()
@@ -72,11 +64,6 @@ def register_train_pipeline_cli(*args, **kwargs):
 @cli.command(name="register-model-deployment")
 def deploy_model_cli(*args, **kwargs):
     model_deployment_pipeline(*args, **kwargs)
-
-
-@cli.command(name="github")
-def deploy_model_cli(*args, **kwargs):
-    github_flow(*args, **kwargs)
 
 
 @cli.command(name="register-all-flows")
