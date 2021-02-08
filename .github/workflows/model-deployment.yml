@@ -36,7 +36,7 @@ jobs:
       - name: Set prefect server
         run: | 
             prefect backend server && \
-            echo "PREFECT__CLOUD__API=http://prefect-server-apollo.prefect:4200/graphql/" >> $GITHUB_ENV
+            echo "PREFECT__CLOUD__API=http://a991857acebaa421385f3b723277c903-1047575743.eu-west-1.elb.amazonaws.com:4200/graphql/" >> $GITHUB_ENV
 
       - name: Run deployment flow
         run: |
