@@ -35,7 +35,8 @@ jobs:
 
       - name: Register model deployment flow
         run: |
-          - ls wine_classifier/
+          - ls -la
+          - tree
 
       - name: Set prefect server
         run: | 
