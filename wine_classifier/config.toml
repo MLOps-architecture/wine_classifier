@@ -1,3 +1,3 @@
 [model]
-modelUri = "s3://mlops-model-artifact/1/a7cdb2bccbcd4778a1cb48043d887521/artifacts/model"
-environment = "stage"
+modelUri = "s3://mlops-model-artifact/1/blahblash/artifacts/model"
+environment = "production"

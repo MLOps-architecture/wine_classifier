@@ -1,4 +1,4 @@
 FROM prefecthq/prefect:latest
 
-COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+COPY . /tmp/wine_classifier
+RUN pip install -e /tmp/wine_classifier

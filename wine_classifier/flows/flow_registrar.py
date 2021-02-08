@@ -2,7 +2,7 @@ import click
 from wine_classifier import config
 from prefect import Parameter, Flow
 from prefect.run_configs import KubernetesRun
-from prefect.storage import GitHub, Local
+from prefect.storage import GitHub, S3
 import mlflow
 
 from wine_classifier.pipelines.train_pipeline import fetch_data, train_model
@@ -68,7 +68,7 @@ def github_flow():
 
     custom_confs = {
         "run_config": KubernetesRun(
-            image="drtools/prefect:wine-classifier-3",
+            image="drtools/prefect:wine-classifier-4",
             # labels=[environment],
         ),
         "storage": FLOW_GITHUB_STORAGE
