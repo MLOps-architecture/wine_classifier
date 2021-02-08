@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  model-deployment:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -25,7 +25,7 @@ jobs:
       
       - name: Installing prefect package
         run: | 
-          pip install -e prefect
+          pip install prefect
         
       - name: Set prefect server
         run: | 
