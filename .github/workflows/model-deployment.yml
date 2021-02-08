@@ -33,9 +33,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install prefect
 
-      - name: Register model deployment flow
-        run: |
-          - python $GITHUB_WORKSPACE/wine_classifier/flows/flow_registrar.py  register-model-deployment
+#      - name: Register model deployment flow
+#        run: |
+#          - python $GITHUB_WORKSPACE/wine_classifier/flows/flow_registrar.py  register-model-deployment
 
       - name: Set prefect server
         run: | 
