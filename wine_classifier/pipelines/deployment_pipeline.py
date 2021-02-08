@@ -52,7 +52,7 @@ CUSTOM_RESOURCE_INFO = dict(
 
 @task()
 def deploy_model(model_uri: str, namespace: str = "default"):
-    logger = prefect.context.get("deploy-model")
+    logger = prefect.context.get("logger")
 
     logger.info(f"Deploying model {model_uri}")
 
