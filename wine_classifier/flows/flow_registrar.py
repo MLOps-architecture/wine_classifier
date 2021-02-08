@@ -73,4 +73,4 @@ def deploy_model_cli():
 
 
 if __name__ == "__main__":
-    github_flow()
+    cli()

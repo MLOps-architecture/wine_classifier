@@ -54,7 +54,7 @@ CUSTOM_RESOURCE_INFO = dict(
 def deploy_model(model_uri: str, namespace: str = "default"):
     logger = prefect.context.get("logger")
 
-    logger.info(f"Deploying model {model_uri}")
+    logger.info(f"Deploying model {model_uri} to enviroment {namespace}")
 
     config.load_incluster_config()
     custom_api = client.CustomObjectsApi()
