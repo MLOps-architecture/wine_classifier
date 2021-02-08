@@ -56,31 +56,7 @@ def model_deployment_pipeline():
     flow.register(project_name="mlops-demo")
 
 
-def github_flow():
 
-    import prefect
-
-    @prefect.task
-    def github_storage_task(model, namespace):
-        logger = prefect.context.get("logger")
-        logger.info(model)
-        logger.info(namespace)
-
-    custom_confs = {
-        "run_config": KubernetesRun(
-            image="drtools/prefect:wine-classifier-4",
-            # labels=[environment],
-        ),
-        "storage": FLOW_GITHUB_STORAGE
-    }
-
-    with Flow("github", **custom_confs,) as flow:
-        model_uri = Parameter("model_uri", default=config["model"]["modelUri"])
-        environment = Parameter("environment", default=config["model"]["environment"])
-
-        github_storage_task(model=model_uri, namespace=environment)
-
-    flow.register(project_name="mlops-demo")
 
 
 @click.group()
