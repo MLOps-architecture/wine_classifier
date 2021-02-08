@@ -22,25 +22,32 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+
+      - name: Configure AWS credentials from Production account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
       - name: Set up Python
         uses: actions/setup-python@v2
-        with:        
+        with:
           python-version: 3.8
-      
-      - name: Install dependencies
-        run: | 
-          python -m pip install --upgrade pip
-          pip install prefect
 
-#      - name: Register model deployment flow
-#        run: |
-#          - python $GITHUB_WORKSPACE/wine_classifier/flows/flow_registrar.py  register-model-deployment
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e $GITHUB_WORKSPACE
 
       - name: Set prefect server
-        run: | 
+        run: |
             prefect backend server && \
-            echo "PREFECT__CLOUD__API=http://a991857acebaa421385f3b723277c903-1047575743.eu-west-1.elb.amazonaws.com:4200/graphql/" >> $GITHUB_ENV
+            echo "PREFECT__CLOUD__API=${{ secrets.PROD_PREFECT_SERVER_API }}" >> $GITHUB_ENV
+
+      - name: Register model deployment flow
+        run: |
+          python wine_classifier/flows/flow_registrar.py  register-model-deployment
 
       - name: Run deployment flow
         run: |
