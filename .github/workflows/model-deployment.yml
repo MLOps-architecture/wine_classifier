@@ -35,8 +35,7 @@ jobs:
 
       - name: Register model deployment flow
         run: |
-          - ls -la
-          - tree
+          - ls
 
       - name: Set prefect server
         run: | 
