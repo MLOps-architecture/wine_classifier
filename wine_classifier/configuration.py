@@ -1,8 +1,6 @@
 import os
-from typing import cast
-
 import toml
-from box import Box
+from typing import cast
 
 
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "config.toml")
