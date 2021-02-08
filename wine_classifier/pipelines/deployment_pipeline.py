@@ -50,9 +50,9 @@ CUSTOM_RESOURCE_INFO = dict(
 )
 
 
-@task()
+@task
 def deploy_model(model_uri: str, namespace: str = "default"):
-    logger = prefect.utilities.logging.get_logger()
+    logger = prefect.context.get("logger")
 
     logger.info(f"Deploying model {model_uri}")
 
@@ -79,7 +79,3 @@ def deploy_model(model_uri: str, namespace: str = "default"):
             name=existent_deployment["metadata"]["name"],
             body=existent_deployment,
         )
-
-    # TODO: wait to become available
-
-    logger.info("Deployment created. status='%s'" % resp["status"]["state"])
