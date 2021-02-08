@@ -1,6 +1,7 @@
 import yaml
-from kubernetes import client, config
+import prefect
 from prefect import task
+from kubernetes import client, config
 
 seldon_deployment = """
     apiVersion: machinelearning.seldon.io/v1alpha2
@@ -51,7 +52,9 @@ CUSTOM_RESOURCE_INFO = dict(
 
 @task()
 def deploy_model(model_uri: str, namespace: str = "default"):
-    print(f"Deploying model {model_uri}")
+    logger = prefect.context.get("deploy-model")
+
+    logger.info(f"Deploying model {model_uri}")
 
     config.load_incluster_config()
     custom_api = client.CustomObjectsApi()
@@ -64,7 +67,7 @@ def deploy_model(model_uri: str, namespace: str = "default"):
             **CUSTOM_RESOURCE_INFO, namespace=namespace, body=dep,
         )
     except:
-        print("Updating existing model")
+        logger.info("Updating existing model")
         existent_deployment = custom_api.get_namespaced_custom_object(
             **CUSTOM_RESOURCE_INFO, namespace=namespace, name=dep["metadata"]["name"],
         )
@@ -79,4 +82,4 @@ def deploy_model(model_uri: str, namespace: str = "default"):
 
     # TODO: wait to become available
 
-    print("Deployment created. status='%s'" % resp["status"]["state"])
+    logger.info("Deployment created. status='%s'" % resp["status"]["state"])
