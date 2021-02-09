@@ -3,20 +3,13 @@ from wine_classifier import config
 from prefect import Parameter, Flow
 from prefect.run_configs import KubernetesRun
 from prefect.storage import GitHub, S3
-import mlflow
-
 from wine_classifier.pipelines.train_pipeline import fetch_data, train_model
 from wine_classifier.pipelines.deployment_pipeline import deploy_model
 
 
-mlflow.set_tracking_uri("http://mlflow.mlflow:5000")
-
-
 def wine_classifier_train_pipeline():
     custom_confs = {
-        "run_config": KubernetesRun(
-            image="drtools/prefect:wine-classifier-3", labels=["stage"]
-        ),
+        "run_config": KubernetesRun(image="drtools/prefect:wine-classifier-3",),
         "storage": S3("dr-prefect"),
     }
     with Flow("wine-classifier-train-pipeline", **custom_confs,) as flow:
@@ -36,10 +29,9 @@ def model_deployment_pipeline():
     custom_confs = {
         "run_config": KubernetesRun(
             image="drtools/prefect:wine-classifier-3",
-            # labels=[environment],
             service_account_name="prefect-deployment-sa",
         ),
-        "storage": S3("dr-prefect")
+        "storage": S3("dr-prefect"),
     }
 
     with Flow("model-deployment-pipeline", **custom_confs,) as flow:

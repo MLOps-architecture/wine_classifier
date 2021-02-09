@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
-
+import mlflow
 import mlflow.sklearn
 
 import logging
@@ -32,6 +32,9 @@ def fetch_data():
 def train_model(
     data: pd.DataFrame, in_alpha: float, in_l1_ratio: float, mlflow_experiment_id: int
 ):
+    mlflow.set_tracking_uri("http://mlflow.mlflow:5000")
+
+
     def eval_metrics(actual, pred):
         rmse = np.sqrt(mean_squared_error(actual, pred))
         mae = mean_absolute_error(actual, pred)
