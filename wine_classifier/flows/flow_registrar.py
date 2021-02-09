@@ -9,7 +9,7 @@ from wine_classifier.pipelines.train_pipeline import fetch_data, train_model
 from wine_classifier.pipelines.deployment_pipeline import deploy_model
 
 
-mlflow.set_tracking_uri("http://mlflow.datarevenue.com:5000")
+mlflow.set_tracking_uri("http://mlflow.mlflow:5000")
 
 
 def wine_classifier_train_pipeline():
