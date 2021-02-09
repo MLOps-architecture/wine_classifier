@@ -17,7 +17,7 @@ def wine_classifier_train_pipeline():
         "run_config": KubernetesRun(
             image="drtools/prefect:wine-classifier-3", labels=["stage"]
         ),
-        "storage": S3("dr-bucket"),
+        "storage": S3("dr-prefect"),
     }
     with Flow("wine-classifier-train-pipeline", **custom_confs,) as flow:
         in_alpha = Parameter("in_alpha", default=0.5)
@@ -39,7 +39,7 @@ def model_deployment_pipeline():
             # labels=[environment],
             service_account_name="prefect-deployment-sa",
         ),
-        "storage": S3("dr-bucket")
+        "storage": S3("dr-prefect")
     }
 
     with Flow("model-deployment-pipeline", **custom_confs,) as flow:
